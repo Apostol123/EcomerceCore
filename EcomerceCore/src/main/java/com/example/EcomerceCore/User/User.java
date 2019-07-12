@@ -8,6 +8,7 @@ public class User {
 	
 	@Id
 	String id;
+	
 	String username;
 	String password;
 	String firstName;
