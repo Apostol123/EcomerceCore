@@ -3,12 +3,18 @@ package com.example.EcomerceCore.User;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+
 
 
 
@@ -35,7 +41,8 @@ public class UserController {
 	 * @param topic
 	 */
 	@RequestMapping(method=RequestMethod.POST,value="/users")
-	public void addUser(@RequestBody User user) {
+	public void addUser(@RequestBody User user,HttpSession session) {
+		user.setId(session.getId());
 		userService.addUser(user);
 	}
 	
@@ -47,6 +54,14 @@ public class UserController {
 	@RequestMapping(method=RequestMethod.DELETE,value="/users/{id}")
 	public void addUser(@PathVariable String id) {
 		userService.deleteUser(id);
+	}
+	
+	@PostMapping("/users/closeSession/{userId}")
+	public String destroySession(HttpServletRequest request,String userId) {
+		if (request.getSession().getId().equalsIgnoreCase(userId)) {
+			request.getSession().invalidate();
+		}
+		return "redirect:/";
 	}
 	
 
